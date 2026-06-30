@@ -40,28 +40,28 @@ export default function Contact({ selectedProduct, setSelectedProduct }) {
     setSending(true);
 
     const paymentLabel = form.payment === 'nequi' 
-      ? '\u{1F49C} Nequi' 
-      : '\u{1F4E6} Contraentrega';
+      ? `${String.fromCodePoint(0x1F49C)} Nequi` 
+      : `${String.fromCodePoint(0x1F4E6)} Contraentrega`;
     const selectedProd = PRODUCTS.find(p => p.name === form.product);
     
-    // Get full absolute URL for the image so WhatsApp can render a preview
-    const imageUrl = selectedProd ? `${window.location.origin}/${selectedProd.image}` : '';
+    // Replace spaces with %20 so WhatsApp parses the entire URL as a single highlighted link
+    const imageUrl = selectedProd ? `${window.location.origin}/${selectedProd.image.replace(/ /g, '%20')}` : '';
 
-    let textMessage = `*\u{1F9F6} NUEVO PEDIDO - TEJIDOS CON AMOR*\n`;
+    let textMessage = `*${String.fromCodePoint(0x1F9F6)} NUEVO PEDIDO - TEJIDOS CON AMOR*\n`;
     textMessage += `==================================\n\n`;
-    textMessage += `\u{1F464} *Cliente:* ${form.name}\n`;
-    textMessage += `\u{1F4DE} *Contacto:* ${form.phone}\n`;
-    textMessage += `\u{1F9F8} *Producto:* ${form.product}\n`;
-    textMessage += `\u{1F4B3} *Método de pago:* ${paymentLabel}\n`;
-    textMessage += `\u{23F0} *Elaboración:* 7 a 10 días hábiles\n\n`;
+    textMessage += `${String.fromCodePoint(0x1F464)} *Cliente:* ${form.name}\n`;
+    textMessage += `${String.fromCodePoint(0x1F4DE)} *Contacto:* ${form.phone}\n`;
+    textMessage += `${String.fromCodePoint(0x1F9F8)} *Producto:* ${form.product}\n`;
+    textMessage += `${String.fromCodePoint(0x1F4B3)} *Método de pago:* ${paymentLabel}\n`;
+    textMessage += `${String.fromCodePoint(0x23F0)} *Elaboración:* 7 a 10 días hábiles\n\n`;
     
     if (form.message.trim()) {
-      textMessage += `\u{1F4DD} *Notas:* ${form.message}\n\n`;
+      textMessage += `${String.fromCodePoint(0x1F4DD)} *Notas:* ${form.message}\n\n`;
     }
     
     textMessage += `==================================\n`;
     if (imageUrl) {
-      textMessage += `\u{1F517} *Ver foto:* ${imageUrl}\n`;
+      textMessage += `${String.fromCodePoint(0x1F517)} *Ver foto:* ${imageUrl}\n`;
     }
 
     const txt = encodeURIComponent(textMessage);
@@ -69,7 +69,7 @@ export default function Contact({ selectedProduct, setSelectedProduct }) {
     setTimeout(() => {
       setSending(false);
       setSuccess(true);
-      window.open(`https://wa.me/${WA_NUMBER}?text=${txt}`, '_blank', 'noopener');
+      window.open(`https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${txt}`, '_blank', 'noopener');
       setTimeout(() => {
         setSuccess(false);
         setForm({ name: '', phone: '', product: '', payment: '', message: '' });
