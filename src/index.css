@@ -76,7 +76,7 @@ ul {
   --bg-card:          #12121e;
   --bg-card-hover:    #181827;
   --bg-glass:         rgba(18, 18, 30, 0.65);
-  --bg-glass-heavy:   rgba(10, 10, 18, 0.85);
+  --bg-glass-heavy:   rgba(10, 10, 18, 0.88);
 
   /* Typography */
   --txt-main:         #f8fafc;
@@ -366,11 +366,12 @@ ul {
    ========================================================== */
 .cinematic-hero {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh - 100px);
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
   overflow: hidden;
-  padding: 100px 0 60px;
+  padding: 60px 0 40px;
 }
 
 /* Video Engine */
@@ -411,7 +412,7 @@ ul {
   bottom: 0;
   left: 0;
   right: 0;
-  height: 250px;
+  height: 200px;
   background: linear-gradient(0deg, #07070b 0%, transparent 100%);
 }
 
@@ -436,12 +437,13 @@ ul {
   position: relative;
   z-index: 10;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .hero-grid {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 50px;
+  gap: 40px;
   align-items: center;
 }
 
@@ -450,7 +452,7 @@ ul {
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .film-live-badge {
@@ -515,12 +517,12 @@ ul {
   display: flex;
   flex-direction: column;
   gap: 4px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .title-pre {
   font-family: var(--font-head);
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   font-weight: 700;
   letter-spacing: 4px;
   color: var(--neon-teal);
@@ -529,7 +531,7 @@ ul {
 
 .title-gradient-block {
   font-family: var(--font-serif);
-  font-size: clamp(2.8rem, 5.2vw, 4.8rem);
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
   font-weight: 900;
   line-height: 1.02;
   letter-spacing: -0.5px;
@@ -543,26 +545,26 @@ ul {
 .title-sub-cursive {
   font-family: var(--font-serif);
   font-style: italic;
-  font-size: clamp(1.4rem, 2.4vw, 2rem);
+  font-size: clamp(1.3rem, 2.2vw, 1.9rem);
   color: var(--neon-gold);
   text-shadow: 0 0 15px var(--neon-gold-glow);
 }
 
 .hero-synopsis {
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: var(--txt-muted);
-  line-height: 1.75;
-  margin-bottom: 36px;
-  max-width: 540px;
+  line-height: 1.7;
+  margin-bottom: 30px;
+  max-width: 520px;
 }
 
 /* Hero Buttons */
 .hero-btn-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-wrap: wrap;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
 }
 
 .btn-glow-primary {
@@ -570,11 +572,11 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 28px;
+  padding: 13px 26px;
   background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
   color: #09090e;
   font-family: var(--font-head);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 800;
   letter-spacing: 1.5px;
   text-transform: uppercase;
@@ -594,12 +596,12 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 13px 26px;
+  padding: 12px 24px;
   background: var(--bg-glass);
   border: 1px solid var(--border-neon);
   color: #fff;
   font-family: var(--font-head);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -620,12 +622,12 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 13px 22px;
+  padding: 12px 20px;
   background: linear-gradient(135deg, hsla(145, 70%, 45%, 0.2), hsla(145, 70%, 35%, 0.3));
   border: 1px solid rgba(34, 197, 94, 0.4);
   color: #4ade80;
   font-family: var(--font-head);
-  font-size: 0.85rem;
+  font-size: 0.84rem;
   font-weight: 700;
   letter-spacing: 1px;
   border-radius: var(--radius-sm);
@@ -643,8 +645,8 @@ ul {
 .hero-metrics-bar {
   display: flex;
   align-items: center;
-  gap: 24px;
-  padding: 16px 24px;
+  gap: 20px;
+  padding: 14px 22px;
   background: var(--bg-glass);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
@@ -659,14 +661,14 @@ ul {
 
 .metric-val {
   font-family: var(--font-head);
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   font-weight: 900;
   color: var(--neon-pink);
   line-height: 1;
 }
 
 .metric-lbl {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -676,7 +678,7 @@ ul {
 
 .metric-separator {
   width: 1px;
-  height: 28px;
+  height: 26px;
   background: var(--border-glass);
 }
 
@@ -689,7 +691,7 @@ ul {
   background: var(--bg-glass-heavy);
   border: 1px solid var(--border-glass);
   border-radius: var(--radius-lg);
-  padding: 32px;
+  padding: 28px;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(255, 45, 120, 0.15);
@@ -711,7 +713,7 @@ ul {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .scene-tag {
@@ -760,28 +762,28 @@ ul {
 
 .scene-title {
   font-family: var(--font-serif);
-  font-size: 1.6rem;
+  font-size: 1.5rem;
   font-weight: 800;
   color: #fff;
   margin-bottom: 8px;
 }
 
 .scene-desc {
-  font-size: 0.92rem;
+  font-size: 0.9rem;
   color: var(--txt-muted);
-  line-height: 1.6;
-  margin-bottom: 20px;
+  line-height: 1.55;
+  margin-bottom: 18px;
 }
 
 .scene-highlights {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .highlight-pill {
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   font-weight: 600;
   color: var(--pink-light);
   background: rgba(255, 45, 120, 0.08);
@@ -793,7 +795,7 @@ ul {
 /* Scene Switcher Tabs */
 .scene-switcher-container {
   border-top: 1px solid var(--border-subtle);
-  padding-top: 20px;
+  padding-top: 18px;
 }
 
 .scene-switcher-label {
@@ -803,7 +805,7 @@ ul {
   font-weight: 800;
   letter-spacing: 1.5px;
   color: var(--txt-dim);
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .scene-tabs-grid {
@@ -863,15 +865,11 @@ ul {
 
 /* Scroll Cue */
 .hero-scroll-cue {
-  position: absolute;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
+  margin-top: 10px;
   opacity: 0.75;
   transition: var(--trans-fast);
 }
@@ -889,10 +887,10 @@ ul {
 }
 
 .scroll-cue-mouse {
-  width: 20px;
-  height: 32px;
+  width: 18px;
+  height: 28px;
   border: 2px solid var(--border-glass);
-  border-radius: 12px;
+  border-radius: 10px;
   display: flex;
   justify-content: center;
   padding-top: 4px;
@@ -909,7 +907,56 @@ ul {
 
 @keyframes mouseScroll {
   0% { transform: translateY(0); opacity: 1; }
-  100% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(10px); opacity: 0; }
+}
+
+/* ==========================================================
+   MARQUEE TICKER SECTION
+   ========================================================== */
+.marquee-section {
+  width: 100%;
+  padding: 16px 0;
+  background: rgba(13, 13, 20, 0.95);
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  overflow: hidden;
+  position: relative;
+  z-index: 10;
+}
+
+.marquee-track {
+  display: flex;
+  gap: 36px;
+  width: max-content;
+  animation: marqueeRun 24s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeRun {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-head);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--txt-muted);
+  white-space: nowrap;
+}
+
+.marquee-item .dot {
+  color: var(--neon-pink);
+  font-size: 0.85rem;
+  text-shadow: 0 0 8px var(--neon-pink);
 }
 
 /* ==========================================================
@@ -917,7 +964,7 @@ ul {
    ========================================================== */
 .cinema-showcase-section {
   position: relative;
-  padding: 120px 0 100px;
+  padding: 100px 0 80px;
   overflow: hidden;
 }
 
@@ -935,7 +982,7 @@ ul {
 
 .cinema-header-center {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 45px;
 }
 
 .cinema-header-center .section-sub {
@@ -945,7 +992,7 @@ ul {
 /* Cinema Theater Wrapper */
 .cinema-theater-wrapper {
   max-width: 1100px;
-  margin: 0 auto 60px;
+  margin: 0 auto 50px;
 }
 
 .cinema-screen-frame {
