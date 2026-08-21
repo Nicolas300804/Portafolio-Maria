@@ -21,7 +21,7 @@ function ProductCard({ product, onOrder }) {
           observer.unobserve(entry.target);
         }
       },
-      { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+      { threshold: 0.1, rootMargin: '0px 0px -30px 0px' }
     );
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
@@ -30,13 +30,13 @@ function ProductCard({ product, onOrder }) {
   return (
     <article
       ref={ref}
-      className="product-card fade-in"
+      className="product-card-cinematic fade-in"
       id={`product-${product.id}`}
       role="article"
       aria-label={product.name}
     >
       {product.badge && (
-        <span className={`card-badge ${product.badge.cls}`} aria-label={product.badge.text}>
+        <span className={`card-badge-glow ${product.badge.cls}`} aria-label={product.badge.text}>
           {product.badge.text}
         </span>
       )}
@@ -47,28 +47,35 @@ function ProductCard({ product, onOrder }) {
           alt={`${product.name} - muñeco de crochet artesanal`}
           loading="lazy"
         />
-        <div className="card-overlay" aria-hidden="true">
-          <button className="btn-quick" onClick={() => onOrder(product.name)}>
-            ¡Lo quiero!
+        <div className="card-lens-flare" aria-hidden="true" />
+        <div className="card-overlay-cinematic" aria-hidden="true">
+          <button className="btn-quick-glow" onClick={() => onOrder(product.name)}>
+            <span>¡Lo quiero! 🧶</span>
           </button>
         </div>
       </div>
 
       <div className="card-body">
-        <span className="card-cat">{product.category}</span>
+        <div className="card-meta-line">
+          <span className="card-cat">{product.category}</span>
+          <span className="card-edition-tag">HECHO A MANO</span>
+        </div>
         <h3 className="card-name">{product.name}</h3>
         <p className="card-desc">{product.desc}</p>
 
         <div className="card-footer">
-          <span className={`card-price ${priceColor(product.price)}`}>
-            {fmtPrice(product.price)}
-          </span>
+          <div className="price-stack">
+            <span className="price-tag-label">PRECIO</span>
+            <span className={`card-price ${priceColor(product.price)}`}>
+              {fmtPrice(product.price)}
+            </span>
+          </div>
           <button
-            className="card-order"
+            className="card-order-btn-cinematic"
             onClick={() => onOrder(product.name)}
             aria-label={`Pedir ${product.name}`}
           >
-            Pedir
+            <span>Pedir</span>
           </button>
         </div>
       </div>
@@ -84,28 +91,27 @@ export default function Catalog({ onOrder }) {
     : PRODUCTS.filter(p => p.price === active);
 
   return (
-    <section id="catalogo" aria-labelledby="catalog-heading">
-      {/* Filters */}
+    <section id="catalogo" aria-labelledby="catalog-heading" className="catalog-section">
       <div className="filter-section container" id="precios">
-        <div style={{ marginBottom: 40 }}>
-          <span className="section-label">Catálogo completo</span>
-          <h2 className="section-title" id="catalog-heading">Elige tu favorito</h2>
-          <p className="section-sub">Filtra por precio para encontrar el muñeco perfecto</p>
+        <div className="catalog-header-wrap">
+          <span className="section-label">✦ CATÁLOGO COMPLETO ✦</span>
+          <h2 className="section-title" id="catalog-heading">Galería de Personajes</h2>
+          <p className="section-sub">Filtra por categoría de precio y encuentra tu muñeco ideal</p>
         </div>
 
-        <div className="filter-bar" role="group" aria-label="Filtros de precio">
+        <div className="filter-bar-cinematic" role="group" aria-label="Filtros de precio">
           {FILTERS.map(f => (
             <button
               key={f.value}
-              className={`filter-chip${active === f.value ? ' active' : ''}`}
+              className={`filter-chip-cinematic${active === f.value ? ' active' : ''}`}
               onClick={() => setActive(f.value)}
               aria-pressed={active === f.value}
               id={`filter-${f.value}`}
             >
               {f.dot && (
                 <span
-                  className="price-dot"
-                  style={{ background: f.dot }}
+                  className="price-dot-glow"
+                  style={{ background: f.dot, boxShadow: `0 0 10px ${f.dot}` }}
                   aria-hidden="true"
                 />
               )}
@@ -121,7 +127,7 @@ export default function Catalog({ onOrder }) {
             <p style={{ color: 'var(--txt-2)' }}>No hay productos en esta categoría</p>
           </div>
         ) : (
-          <div className="product-grid" role="list" aria-label="Catálogo de muñecos">
+          <div className="product-grid-cinematic" role="list" aria-label="Catálogo de muñecos">
             {filtered.map(p => (
               <ProductCard key={p.id} product={p} onOrder={onOrder} />
             ))}

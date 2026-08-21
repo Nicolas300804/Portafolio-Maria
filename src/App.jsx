@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Marquee from './components/Marquee';
+import CinemaShowcase from './components/CinemaShowcase';
 import ProductCarousel from './components/ProductCarousel';
 import Catalog from './components/Catalog';
 import PriceGuide from './components/PriceGuide';
@@ -41,11 +42,12 @@ export default function App() {
   };
 
   return (
-    <>
+    <div className="cinematic-app">
       <Navbar />
       <main>
         <Hero />
         <Marquee />
+        <CinemaShowcase onOrder={handleSelectProduct} />
         <ProductCarousel onOrder={handleSelectProduct} />
         <Catalog onOrder={handleSelectProduct} />
         <PriceGuide />
@@ -54,6 +56,6 @@ export default function App() {
       </main>
       <Footer />
       <BackToTop />
-    </>
+    </div>
   );
 }

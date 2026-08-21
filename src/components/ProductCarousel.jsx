@@ -15,19 +15,19 @@ export default function ProductCarousel({ onOrder }) {
     <section className="carousel-section container" aria-labelledby="carousel-heading">
       <div className="carousel-header">
         <div>
-          <span className="section-label">Destacados</span>
+          <span className="section-label">✦ ESTRENOS & FAVORITOS ✦</span>
           <h2 className="section-title" id="carousel-heading">
-            Los más queridos
+            Los Más Aclamados
           </h2>
           <p className="section-sub">
-            Una selección de nuestros muñecos favoritos, amados por todos
+            Las creaciones estelares más pedidas por nuestra comunidad.
           </p>
         </div>
 
         <div className="carousel-nav" role="group" aria-label="Navegación del carrusel">
           <button
             ref={prevRef}
-            className="swiper-btn"
+            className="swiper-btn-cinematic"
             aria-label="Anterior"
             onClick={() => swiperInst?.slidePrev()}
           >
@@ -35,7 +35,7 @@ export default function ProductCarousel({ onOrder }) {
           </button>
           <button
             ref={nextRef}
-            className="swiper-btn"
+            className="swiper-btn-cinematic"
             aria-label="Siguiente"
             onClick={() => swiperInst?.slideNext()}
           >
@@ -47,27 +47,28 @@ export default function ProductCarousel({ onOrder }) {
       <Swiper
         modules={[Navigation, Pagination, Autoplay]}
         slidesPerView={1.2}
-        spaceBetween={16}
+        spaceBetween={18}
         loop={true}
-        autoplay={{ delay: 3500, disableOnInteraction: false, pauseOnMouseEnter: true }}
-        pagination={{ clickable: true }}
+        autoplay={{ delay: 3800, disableOnInteraction: false, pauseOnMouseEnter: true }}
+        pagination={{ clickable: true, dynamicBullets: true }}
         breakpoints={{
-          480:  { slidesPerView: 2.1, spaceBetween: 16 },
-          768:  { slidesPerView: 3.1, spaceBetween: 18 },
-          1024: { slidesPerView: 4,   spaceBetween: 20 },
-          1200: { slidesPerView: 4.5, spaceBetween: 20 },
+          480:  { slidesPerView: 2.1, spaceBetween: 18 },
+          768:  { slidesPerView: 3.1, spaceBetween: 20 },
+          1024: { slidesPerView: 4,   spaceBetween: 22 },
+          1200: { slidesPerView: 4.4, spaceBetween: 24 },
         }}
         onSwiper={setSwiperInst}
       >
         {CAROUSEL_ITEMS.map((item) => (
           <SwiperSlide key={item.id}>
-            <div className="slide-card" role="article" aria-label={item.name}>
+            <div className="slide-card-cinematic" role="article" aria-label={item.name}>
               <div className="slide-img-wrap">
                 <img
                   src={item.image}
                   alt={item.name}
                   loading="lazy"
                 />
+                <div className="card-lens-shine" aria-hidden="true" />
                 {item.badge && (
                   <span className={`slide-badge ${item.badge.cls}`}>
                     {item.badge.text}
@@ -76,18 +77,24 @@ export default function ProductCarousel({ onOrder }) {
               </div>
 
               <div className="slide-body">
-                <span className="slide-cat">{item.category}</span>
+                <div className="slide-meta-row">
+                  <span className="slide-cat">{item.category}</span>
+                  <span className="slide-film-tag">EDICIÓN ESPECIAL</span>
+                </div>
                 <h3 className="slide-name">{item.name}</h3>
-                <span className={`slide-price ${priceColor(item.price)}`}>
-                  {fmtPrice(item.price)}
-                </span>
-                <button
-                  className="slide-quick-add"
-                  onClick={() => onOrder?.(item.name)}
-                  aria-label={`Pedir ${item.name}`}
-                >
-                  + Pedir este
-                </button>
+                
+                <div className="slide-footer-row">
+                  <span className={`slide-price ${priceColor(item.price)}`}>
+                    {fmtPrice(item.price)}
+                  </span>
+                  <button
+                    className="slide-quick-add-glow"
+                    onClick={() => onOrder?.(item.name)}
+                    aria-label={`Pedir ${item.name}`}
+                  >
+                    <span>Pedir 🧶</span>
+                  </button>
+                </div>
               </div>
             </div>
           </SwiperSlide>

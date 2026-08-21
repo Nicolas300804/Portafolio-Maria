@@ -1,67 +1,214 @@
+import { useState, useRef, useEffect } from 'react';
+import { CINEMATIC_VIDEOS } from '../data/videos';
+
 export default function Hero() {
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const videoRef = useRef(null);
+
+  const activeVideo = CINEMATIC_VIDEOS[activeIdx];
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => setIsPlaying(true))
+          .catch(() => setIsPlaying(false));
+      }
+    }
+  }, [activeIdx]);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
+
+  const togglePlay = () => {
+    if (videoRef.current) {
+      if (videoRef.current.paused) {
+        videoRef.current.play();
+        setIsPlaying(true);
+      } else {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      }
+    }
+  };
+
   return (
-    <section className="hero" id="hero">
-      {/* Content side */}
-      <div className="hero-content">
-        <div className="hero-eyebrow">Hecho a mano con amor</div>
+    <section className="cinematic-hero" id="hero" aria-label="Sección Principal Cinematográfica">
+      {/* Background Video Engine */}
+      <div className="hero-video-wrapper" aria-hidden="true">
+        <video
+          ref={videoRef}
+          className="hero-video-bg"
+          autoPlay
+          loop
+          muted={isMuted}
+          playsInline
+          poster={activeVideo.poster}
+        >
+          <source src={activeVideo.src} type="video/mp4" />
+          Tu navegador no soporta video HTML5.
+        </video>
+        
+        {/* Cinematic Overlays: Vignette, Scanlines & Gradient Glows */}
+        <div className="cinematic-vignette" />
+        <div className="cinematic-lens-flare" />
+        <div className="cinematic-gradient-left" />
+        <div className="cinematic-gradient-bottom" />
+      </div>
 
-        <h1 className="hero-title">
-          Muñecos de<br />
-          <em>Crochet</em><br />
-          Artesanales
-        </h1>
+      {/* Main Content Overlay */}
+      <div className="container hero-container">
+        <div className="hero-grid">
+          
+          {/* Left Column: Cinematic Info & Actions */}
+          <div className="hero-main-content">
+            
+            {/* Top Film Badge */}
+            <div className="film-badge-row">
+              <div className="film-live-badge">
+                <span className="live-dot" />
+                <span className="live-text">CINEMATIC SHOWCASE 2026</span>
+              </div>
+              <div className="soundwave-indicator" aria-hidden="true">
+                <span className="bar bar-1" />
+                <span className="bar bar-2" />
+                <span className="bar bar-3" />
+                <span className="bar bar-4" />
+              </div>
+            </div>
 
-        <p className="hero-desc">
-          Cada pieza es única, tejida con dedicación y mucho cariño.
-          Encuentra el compañero perfecto o regala algo especial e irrepetible.
-        </p>
+            {/* Giant Cinematic Heading */}
+            <h1 className="hero-title-cinematic">
+              <span className="title-pre">COLECCIÓN EXCLUSIVA</span>
+              <span className="title-gradient-block">MUÑECOS DE CROCHET</span>
+              <span className="title-sub-cursive">Hechos con amor y magia</span>
+            </h1>
 
-        <div className="hero-actions">
-          <a href="#catalogo" className="btn-primary" id="hero-explore-btn">
-            <span>Ver colección</span>
-          </a>
-          <a href="#contacto" className="btn-outline" id="hero-order-btn">
-            Pedir a medida
-          </a>
-        </div>
+            {/* Synopsis */}
+            <p className="hero-synopsis">
+              Cada creación es una obra de arte tejida a mano. Personajes entrañables,
+              texturas suaves y acabados de película para regalar momentos inolvidables.
+            </p>
 
-        <div className="hero-stats">
-          <div className="stat-item">
-            <span className="stat-num">19+</span>
-            <span className="stat-lbl">Diseños únicos</span>
+            {/* Action Buttons */}
+            <div className="hero-btn-group">
+              <a href="#catalogo" className="btn-glow-primary" id="hero-btn-catalog">
+                <span className="btn-icon">🧶</span>
+                <span className="btn-txt">EXPLORAR CATÁLOGO</span>
+                <span className="btn-flare" />
+              </a>
+              <a href="#cine-reel" className="btn-glow-secondary" id="hero-btn-cinema">
+                <span className="btn-icon">🎬</span>
+                <span className="btn-txt">VER EXPERIENCIA CINE</span>
+              </a>
+              <a href="#contacto" className="btn-glow-accent" id="hero-btn-order">
+                <span className="btn-icon">💬</span>
+                <span className="btn-txt">PEDIR AHORA</span>
+              </a>
+            </div>
+
+            {/* Quick Metrics */}
+            <div className="hero-metrics-bar">
+              <div className="metric-box">
+                <span className="metric-val">19+</span>
+                <span className="metric-lbl">Personajes</span>
+              </div>
+              <div className="metric-separator" />
+              <div className="metric-box">
+                <span className="metric-val">100%</span>
+                <span className="metric-lbl">Artesanal</span>
+              </div>
+              <div className="metric-separator" />
+              <div className="metric-box">
+                <span className="metric-val">7-10</span>
+                <span className="metric-lbl">Días Entrega</span>
+              </div>
+              <div className="metric-separator" />
+              <div className="metric-box">
+                <span className="metric-val">💜</span>
+                <span className="metric-lbl">Nequi & Contraentrega</span>
+              </div>
+            </div>
           </div>
-          <div className="stat-div" aria-hidden="true" />
-          <div className="stat-item">
-            <span className="stat-num">100%</span>
-            <span className="stat-lbl">Artesanal</span>
+
+          {/* Right Column: Scene Control & Interactive Director Box */}
+          <div className="hero-scene-controls">
+            
+            {/* Director's Slate Card */}
+            <div className="scene-card-glass">
+              <div className="scene-card-header">
+                <span className="scene-tag">{activeVideo.tag}</span>
+                <div className="video-action-btns">
+                  <button
+                    className="video-ctrl-btn"
+                    onClick={togglePlay}
+                    title={isPlaying ? 'Pausar video' : 'Reproducir video'}
+                    aria-label={isPlaying ? 'Pausar' : 'Reproducir'}
+                  >
+                    {isPlaying ? '⏸' : '▶'}
+                  </button>
+                  <button
+                    className={`video-ctrl-btn ${!isMuted ? 'active-audio' : ''}`}
+                    onClick={toggleMute}
+                    title={isMuted ? 'Activar sonido' : 'Silenciar'}
+                    aria-label={isMuted ? 'Activar sonido' : 'Silenciar'}
+                  >
+                    {isMuted ? '🔇' : '🔊'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="scene-card-body">
+                <h2 className="scene-title">{activeVideo.title}</h2>
+                <p className="scene-desc">{activeVideo.description}</p>
+                
+                <div className="scene-highlights">
+                  {activeVideo.highlights.map((h, i) => (
+                    <span key={i} className="highlight-pill">✦ {h}</span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Scene Switcher Tabs */}
+              <div className="scene-switcher-container">
+                <span className="scene-switcher-label">SELECCIONAR ESCENA:</span>
+                <div className="scene-tabs-grid">
+                  {CINEMATIC_VIDEOS.map((v, idx) => (
+                    <button
+                      key={v.id}
+                      className={`scene-tab-btn ${activeIdx === idx ? 'tab-active' : ''}`}
+                      onClick={() => setActiveIdx(idx)}
+                      id={`scene-tab-${v.id}`}
+                    >
+                      <span className="tab-num">0{idx + 1}</span>
+                      <span className="tab-title">{v.title}</span>
+                      {activeIdx === idx && <span className="tab-glow-indicator" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
           </div>
-          <div className="stat-div" aria-hidden="true" />
-          <div className="stat-item">
-            <span className="stat-num">❤️</span>
-            <span className="stat-lbl">Con amor</span>
-          </div>
+
         </div>
       </div>
 
-      {/* Visual side */}
-      <div className="hero-visual" aria-label="Muñecos de crochet destacados">
-        <img
-          src="Images/WhatsApp Image 2026-06-30 at 3.19.02 PM (2).jpeg"
-          alt="Colección de perritos de crochet artesanales"
-          className="hero-img-main"
-          loading="eager"
-        />
-        <div className="hero-visual-overlay" aria-hidden="true" />
-
-        {/* Floating badge */}
-        <div className="hero-badge-float" aria-label="Tejidos artesanales">
-          <span className="badge-float-icon">🏆</span>
-          <div className="badge-float-text">
-            <strong>100% Artesanal</strong>
-            <span>Tejido con amor ✨</span>
-          </div>
+      {/* Bottom Scroll Indicator */}
+      <a href="#cine-reel" className="hero-scroll-cue" aria-label="Desplazarse abajo">
+        <span className="scroll-cue-text">DESLIZA PARA VIVIR LA EXPERIENCIA</span>
+        <div className="scroll-cue-mouse">
+          <div className="mouse-wheel" />
         </div>
-      </div>
+      </a>
     </section>
   );
 }
