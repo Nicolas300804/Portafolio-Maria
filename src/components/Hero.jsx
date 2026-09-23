@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { CINEMATIC_VIDEOS } from '../data/videos';
 
-export default function Hero() {
+export default function Hero({ onNavigate }) {
   const [activeIdx, setActiveIdx] = useState(0);
   const [isMuted, setIsMuted] = useState(true);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -98,21 +98,38 @@ export default function Hero() {
               texturas suaves y acabados de película para regalar momentos inolvidables.
             </p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons connected to SPA navigation */}
             <div className="hero-btn-group">
-              <a href="#catalogo" className="btn-glow-primary" id="hero-btn-catalog">
+              <button
+                type="button"
+                className="btn-glow-primary"
+                id="hero-btn-catalog"
+                onClick={() => onNavigate?.('catalogo')}
+              >
                 <span className="btn-icon">🧶</span>
                 <span className="btn-txt">EXPLORAR CATÁLOGO</span>
                 <span className="btn-flare" />
-              </a>
-              <a href="#cine-reel" className="btn-glow-secondary" id="hero-btn-cinema">
+              </button>
+
+              <button
+                type="button"
+                className="btn-glow-secondary"
+                id="hero-btn-cinema"
+                onClick={() => onNavigate?.('cine')}
+              >
                 <span className="btn-icon">🎬</span>
                 <span className="btn-txt">VER EXPERIENCIA CINE</span>
-              </a>
-              <a href="#contacto" className="btn-glow-accent" id="hero-btn-order">
-                <span className="btn-icon">💬</span>
-                <span className="btn-txt">PEDIR AHORA</span>
-              </a>
+              </button>
+
+              <button
+                type="button"
+                className="btn-glow-accent"
+                id="hero-btn-custom"
+                onClick={() => onNavigate?.('personalizar')}
+              >
+                <span className="btn-icon">🎨</span>
+                <span className="btn-txt">DISEÑAR A MEDIDA</span>
+              </button>
             </div>
 
             {/* Quick Metrics */}
@@ -202,13 +219,18 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Bottom Scroll Indicator */}
-      <a href="#cine-reel" className="hero-scroll-cue" aria-label="Desplazarse abajo">
-        <span className="scroll-cue-text">DESLIZA PARA VIVIR LA EXPERIENCIA</span>
+      {/* Bottom Action Cue */}
+      <button
+        type="button"
+        className="hero-scroll-cue"
+        onClick={() => onNavigate?.('cine')}
+        aria-label="Ir a la experiencia cine"
+      >
+        <span className="scroll-cue-text">EXPLORAR CINE REEL 4K</span>
         <div className="scroll-cue-mouse">
           <div className="mouse-wheel" />
         </div>
-      </a>
+      </button>
     </section>
   );
 }

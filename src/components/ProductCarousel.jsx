@@ -6,7 +6,7 @@ import 'swiper/css/pagination';
 
 import { CAROUSEL_ITEMS, fmtPrice, priceColor } from '../data/products';
 
-export default function ProductCarousel({ onOrder }) {
+export default function ProductCarousel({ onOrder, onQuickView }) {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
   const [swiperInst, setSwiperInst] = useState(null);
@@ -62,7 +62,11 @@ export default function ProductCarousel({ onOrder }) {
         {CAROUSEL_ITEMS.map((item) => (
           <SwiperSlide key={item.id}>
             <div className="slide-card-cinematic" role="article" aria-label={item.name}>
-              <div className="slide-img-wrap">
+              <div
+                className="slide-img-wrap"
+                style={{ cursor: 'pointer' }}
+                onClick={() => onQuickView?.(item)}
+              >
                 <img
                   src={item.image}
                   alt={item.name}
@@ -74,6 +78,9 @@ export default function ProductCarousel({ onOrder }) {
                     {item.badge.text}
                   </span>
                 )}
+                <div className="slide-quick-overlay">
+                  <span>👁️ Vista rápida</span>
+                </div>
               </div>
 
               <div className="slide-body">
@@ -81,7 +88,13 @@ export default function ProductCarousel({ onOrder }) {
                   <span className="slide-cat">{item.category}</span>
                   <span className="slide-film-tag">EDICIÓN ESPECIAL</span>
                 </div>
-                <h3 className="slide-name">{item.name}</h3>
+                <h3
+                  className="slide-name"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => onQuickView?.(item)}
+                >
+                  {item.name}
+                </h3>
                 
                 <div className="slide-footer-row">
                   <span className={`slide-price ${priceColor(item.price)}`}>

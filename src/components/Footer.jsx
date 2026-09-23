@@ -1,4 +1,4 @@
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   const year = new Date().getFullYear();
 
   return (
@@ -13,27 +13,29 @@ export default function Footer() {
             </div>
             <p>
               Muñecos de crochet artesanales, tejidos con dedicación
-              y mucho cariño. Cada pieza cuenta una historia especial.
+              y mucho cariño en Colombia. Cada pieza cuenta una historia única.
             </p>
           </div>
 
           {/* Navigation */}
           <div className="footer-col">
-            <h4>Navegación</h4>
-            <a href="#hero">Inicio</a>
-            <a href="#catalogo">Catálogo</a>
-            <a href="#precios">Precios</a>
-            <a href="#contacto">Contacto</a>
+            <h4>Páginas</h4>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('inicio')}>Inicio</button>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('cine')}>🎬 Cine Reel 4K</button>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('catalogo')}>Catálogo Boutique</button>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('personalizar')}>🎨 Estudio Personalizar</button>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('precios')}>Guía de Precios</button>
+            <button className="footer-nav-link" onClick={() => onNavigate?.('contacto')}>Contacto & WhatsApp</button>
           </div>
 
           {/* Categories */}
           <div className="footer-col">
-            <h4>Categorías</h4>
-            <p>Disney (Stitch)</p>
-            <p>Personajes</p>
-            <p>Animales</p>
-            <p>Perros Premium</p>
-            <p>Parejas</p>
+            <h4>Colecciones</h4>
+            <p>🌟 Disney & Amigos</p>
+            <p>📺 Personajes TV</p>
+            <p>🐾 Animales del Bosque</p>
+            <p>🐶 Perros y Gatos</p>
+            <p>❤️ Parejas & San Valentín</p>
           </div>
 
           {/* CTA */}
@@ -41,24 +43,23 @@ export default function Footer() {
             <h4>¿Listo para pedir?</h4>
             <div className="footer-cta-box">
               <p>
-                Escríbenos por WhatsApp y cuéntanos qué muñeco
-                te robo el corazón.
+                Escríbenos por WhatsApp y tejeremos tu muñeco ideal en 7 a 10 días hábiles.
               </p>
-              <a
-                href="#contacto"
-                id="footer-cta-btn"
-                aria-label="Ir al formulario de contacto"
+              <button
+                className="footer-btn-order"
+                onClick={() => onNavigate?.('contacto')}
+                aria-label="Ir a la estación de pedidos"
               >
-                🧶 Pedir ahora
-              </a>
+                🧶 Hacer Pedido
+              </button>
             </div>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="footer-bottom">
-          <p>© {year} Tejidos con Amor. Todos los derechos reservados.</p>
-          <p>Hecho con ❤️ y mucho hilo.</p>
+          <p>© {year} Tejidos con Amor — Colección Cinematográfica 2026.</p>
+          <p>Hecho con ❤️ y mucho hilo en Colombia.</p>
         </div>
       </div>
     </footer>
