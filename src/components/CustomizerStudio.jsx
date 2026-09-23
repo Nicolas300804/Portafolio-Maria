@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AmigurumiViewer3D from './AmigurumiViewer3D';
 
 const CHARACTERS = [
   { id: 'gato', name: 'Gatito Curioso', icon: '🐱', basePrice: 12000, desc: 'Con orejitas punteagudas y colita suave.' },
@@ -21,9 +22,9 @@ const YARN_COLORS = [
 ];
 
 const ACCESSORIES = [
-  { id: 'llavero', name: 'Argolla para Llavero', icon: '🔑', price: 2000 },
-  { id: 'corazon', name: 'Corazón Tejido', icon: '❤️', price: 3000 },
-  { id: 'sombrero', name: 'Sombrerito / Gorro', icon: '👒', price: 4000 },
+  { id: 'llavero', name: 'Argolla para Llavero Metálica', icon: '🔑', price: 2000 },
+  { id: 'corazon', name: 'Corazón Tejido Plush', icon: '❤️', price: 3000 },
+  { id: 'sombrero', name: 'Sombrerito con Cinta', icon: '👒', price: 4000 },
   { id: 'mono', name: 'Moño o Corbata', icon: '🎀', price: 2000 },
   { id: 'bufanda', name: 'Bufanda Calientita', icon: '🧣', price: 3000 },
 ];
@@ -40,8 +41,8 @@ export default function CustomizerStudio({ onGoToContact }) {
   const [selectedChar, setSelectedChar] = useState(CHARACTERS[0]);
   const [primaryColor, setPrimaryColor] = useState(YARN_COLORS[0]);
   const [secondaryColor, setSecondaryColor] = useState(YARN_COLORS[5]);
-  const [selectedAccessories, setSelectedAccessories] = useState(['llavero', 'corazon']);
-  const [selectedSize, setSelectedSize] = useState(SIZES[0]);
+  const [selectedAccessories, setSelectedAccessories] = useState(['corazon', 'sombrero']);
+  const [selectedSize, setSelectedSize] = useState(SIZES[1]); // Default to mediano
   const [notes, setNotes] = useState('');
 
   const toggleAccessory = (id) => {
@@ -61,7 +62,7 @@ export default function CustomizerStudio({ onGoToContact }) {
   const handleOrderWhatsApp = () => {
     const accNames = selectedAccessories.map(id => ACCESSORIES.find(a => a.id === id)?.name).filter(Boolean);
     
-    let text = `*🧶 ¡HOLA! QUIERO UN PEDIDO PERSONALIZADO*\n`;
+    let text = `*🧶 ¡HOLA! QUIERO UN PEDIDO PERSONALIZADO (SIMULADOR 3D)*\n`;
     text += `==================================\n\n`;
     text += `✨ *Personaje Base:* ${selectedChar.name} (${selectedChar.icon})\n`;
     text += `🎨 *Color Principal:* ${primaryColor.name}\n`;
@@ -75,7 +76,7 @@ export default function CustomizerStudio({ onGoToContact }) {
       text += `📝 *Detalles Adicionales:* ${notes}\n\n`;
     }
     text += `==================================\n`;
-    text += `¿Podemos coordinar para elaborarlo? ¡Muchas gracias! ❤️`;
+    text += `He diseñado este muñeco en el simulador 3D de la página. ¿Podemos coordinar para elaborarlo? ¡Muchas gracias! ❤️`;
 
     const encoded = encodeURIComponent(text);
     window.open(`https://api.whatsapp.com/send?phone=${WA_NUMBER}&text=${encoded}`, '_blank', 'noopener');
@@ -84,53 +85,31 @@ export default function CustomizerStudio({ onGoToContact }) {
   return (
     <section className="customizer-section container" aria-labelledby="customizer-title">
       <div className="customizer-header-center">
-        <span className="section-label">✦ ESTUDIO INTERACTIVO ✦</span>
-        <h1 className="section-title" id="customizer-title">Diseña Tu Muñeco</h1>
+        <span className="section-label">✦ SIMULADOR 3D EN TIEMPO REAL ✦</span>
+        <h1 className="section-title" id="customizer-title">Diseña Tu Muñeco en 3D</h1>
         <p className="section-sub">
-          Personaliza personaje, colores, accesorios y tamaño. Tejeremos tu creación única punto por punto con hilo de algodón antialérgico.
+          Explora tu creación en 360 grados antes de tejerla. Gira, acércate a los puntos de lana y visualiza colores y accesorios con física de luces de estudio.
         </p>
       </div>
 
       <div className="customizer-workspace">
-        {/* Left Interactive Canvas / Visualizer */}
+        {/* Left Column: Interactive 3D WebGL Canvas */}
         <div className="customizer-preview-box">
           <div className="preview-stage-glow">
-            {/* Live Interactive Doll Avatar */}
-            <div className="doll-avatar-card">
-              <div
-                className="doll-avatar-sphere"
-                style={{
-                  background: `radial-gradient(circle at 35% 35%, ${primaryColor.hex} 0%, ${secondaryColor.hex} 100%)`,
-                  boxShadow: `0 20px 40px -10px ${primaryColor.hex}66, inset 0 0 30px rgba(0,0,0,0.3)`
-                }}
-              >
-                <div className="doll-avatar-icon">{selectedChar.icon}</div>
-                {/* Accessory badges floating */}
-                {selectedAccessories.includes('sombrero') && (
-                  <span className="avatar-accessory acc-sombrero" title="Sombrero">👒</span>
-                )}
-                {selectedAccessories.includes('corazon') && (
-                  <span className="avatar-accessory acc-corazon" title="Corazón">❤️</span>
-                )}
-                {selectedAccessories.includes('mono') && (
-                  <span className="avatar-accessory acc-mono" title="Moño">🎀</span>
-                )}
-                {selectedAccessories.includes('bufanda') && (
-                  <span className="avatar-accessory acc-bufanda" title="Bufanda">🧣</span>
-                )}
-                {selectedAccessories.includes('llavero') && (
-                  <span className="avatar-accessory acc-llavero" title="Llavero">🔑</span>
-                )}
-              </div>
-
-              <div className="doll-avatar-info">
-                <span className="doll-preview-name">{selectedChar.name}</span>
-                <span className="doll-preview-colors">
-                  {primaryColor.name} + {secondaryColor.name}
-                </span>
-                <span className="doll-preview-size">{selectedSize.name}</span>
-              </div>
+            {/* Top 3D Header Bar */}
+            <div className="stage-top-bar">
+              <span className="badge-3d-live">✨ MOTOR 3D EN VIVO</span>
+              <span className="char-indicator-tag">{selectedChar.name}</span>
             </div>
+
+            {/* Genuine 3D Interactive Amigurumi Canvas */}
+            <AmigurumiViewer3D
+              character={selectedChar}
+              primaryColor={primaryColor}
+              secondaryColor={secondaryColor}
+              accessories={selectedAccessories}
+              size={selectedSize.id}
+            />
 
             {/* Live Price Estimation Badge */}
             <div className="preview-price-card">
@@ -142,16 +121,16 @@ export default function CustomizerStudio({ onGoToContact }) {
                 </span>
               </div>
               <p className="price-craft-note">
-                ✨ Incluye empaque de regalo y elaboración 100% a mano (7 a 10 días).
+                ✨ Incluye hilado 100% de algodón, ojos térmicos de seguridad, relleno siliconado y empaque especial.
               </p>
               <button className="btn-order-custom-wa" onClick={handleOrderWhatsApp}>
-                <span>¡Pedir por WhatsApp! 💬</span>
+                <span>¡Pedir este diseño a WhatsApp! 💬</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Right Configuration Panels */}
+        {/* Right Column: Customization Controls */}
         <div className="customizer-controls-box">
           {/* Step 1: Base Character */}
           <div className="control-step-card">
@@ -177,7 +156,7 @@ export default function CustomizerStudio({ onGoToContact }) {
           {/* Step 2: Primary Yarn Color */}
           <div className="control-step-card">
             <div className="step-badge">PASO 2</div>
-            <h3 className="step-title">Color de Hilo Principal: <span className="highlight-color-name">{primaryColor.name}</span></h3>
+            <h3 className="step-title">Color de Hilo Principal (Cuerpo & Cabeza): <span className="highlight-color-name">{primaryColor.name}</span></h3>
             <div className="swatches-grid">
               {YARN_COLORS.map(color => (
                 <button
@@ -197,7 +176,7 @@ export default function CustomizerStudio({ onGoToContact }) {
           {/* Step 3: Secondary / Accent Color */}
           <div className="control-step-card">
             <div className="step-badge">PASO 3</div>
-            <h3 className="step-title">Color de Detalles / Orejas: <span className="highlight-color-name">{secondaryColor.name}</span></h3>
+            <h3 className="step-title">Color de Detalles (Pancita & Orejas): <span className="highlight-color-name">{secondaryColor.name}</span></h3>
             <div className="swatches-grid">
               {YARN_COLORS.map(color => (
                 <button
@@ -235,7 +214,7 @@ export default function CustomizerStudio({ onGoToContact }) {
           {/* Step 5: Accessories */}
           <div className="control-step-card">
             <div className="step-badge">PASO 5</div>
-            <h3 className="step-title">Accesorios Opcionales</h3>
+            <h3 className="step-title">Accesorios en 3D Opcionales</h3>
             <div className="accessories-grid">
               {ACCESSORIES.map(acc => {
                 const isSelected = selectedAccessories.includes(acc.id);
