@@ -60,6 +60,7 @@ export default function AmigurumiViewer3D({
 }) {
   const mountRef = useRef(null);
   const sceneRef = useRef(null);
+  const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const controlsRef = useRef(null);
   const dollGroupRef = useRef(null);
@@ -78,8 +79,9 @@ export default function AmigurumiViewer3D({
 
     const width = currentMount.clientWidth;
     const height = currentMount.clientHeight || 460;
-    const camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
-    camera.position.set(0, 1.1, 4.8);
+    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
+    camera.position.set(0, 0.8, 5.0);
+    cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(width, height);
@@ -95,9 +97,9 @@ export default function AmigurumiViewer3D({
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
     controls.minDistance = 2.0;
-    controls.maxDistance = 6.5;
+    controls.maxDistance = 6.8;
     controls.maxPolarAngle = Math.PI / 2 + 0.05;
-    controls.target.set(0, 0.45, 0);
+    controls.target.set(0, 0.25, 0);
     controls.autoRotate = autoRotate;
     controls.autoRotateSpeed = 1.8;
     controlsRef.current = controls;
@@ -556,10 +558,10 @@ export default function AmigurumiViewer3D({
     // ========================================================
     } else if (charId === 'pollito') {
       // Round Yellow Chick Body
-      const chickGeo = new THREE.SphereGeometry(0.75, 36, 36);
+      const chickGeo = new THREE.SphereGeometry(0.72, 36, 36);
       chickGeo.scale(1.05, 1.0, 1.0);
       const chick = new THREE.Mesh(chickGeo, primaryMat);
-      chick.position.set(0, 0.35, 0);
+      chick.position.set(0, 0.08, 0);
       chick.castShadow = true;
       doll.add(chick);
 
@@ -573,13 +575,13 @@ export default function AmigurumiViewer3D({
       const beakGeo = new THREE.SphereGeometry(0.14, 20, 20);
       beakGeo.scale(1.4, 0.65, 0.9);
       const beak = new THREE.Mesh(beakGeo, beakMat);
-      beak.position.set(0, 0.58, 0.74);
+      beak.position.set(0, 0.32, 0.72);
       doll.add(beak);
 
       // Black bead safety eyes
       [-1, 1].forEach((side) => {
         const eye = createSafetyEye(0.08);
-        eye.position.set(side * 0.32, 0.62, 0.65);
+        eye.position.set(side * 0.30, 0.36, 0.64);
         doll.add(eye);
       });
 
@@ -598,20 +600,20 @@ export default function AmigurumiViewer3D({
       puffTop.position.y = 0.42;
       hatGroup.add(puffTop);
 
-      hatGroup.position.set(0, 1.1, 0);
+      hatGroup.position.set(0, 0.82, 0);
       doll.add(hatGroup);
 
       // Real White Crocheted Chef Apron on chest
       const apronGeo = new THREE.CylinderGeometry(0.74, 0.76, 0.55, 32, 1, true, -Math.PI / 3.2, (Math.PI / 3.2) * 2);
       const apron = new THREE.Mesh(apronGeo, feltMat);
-      apron.position.set(0, 0.28, 0.05);
+      apron.position.set(0, 0.02, 0.05);
       doll.add(apron);
 
       // Apron neck strap
       const strapGeo = new THREE.TorusGeometry(0.68, 0.04, 12, 32, Math.PI);
       const strap = new THREE.Mesh(strapGeo, feltMat);
       strap.rotation.x = Math.PI / 2 + 0.3;
-      strap.position.set(0, 0.58, 0.15);
+      strap.position.set(0, 0.32, 0.15);
       doll.add(strap);
 
       // Little Chick Wings
@@ -619,68 +621,104 @@ export default function AmigurumiViewer3D({
         const wingGeo = new THREE.SphereGeometry(0.24, 20, 20);
         wingGeo.scale(0.45, 1.1, 0.7);
         const wing = new THREE.Mesh(wingGeo, primaryMat);
-        wing.position.set(side * 0.74, 0.35, 0);
+        wing.position.set(side * 0.70, 0.10, 0);
         wing.rotation.z = side * 0.45;
         wing.castShadow = true;
         doll.add(wing);
       });
 
+      // Orange Amigurumi Feet standing firmly on the pedestal floor
+      [-1, 1].forEach((side) => {
+        const footGroup = new THREE.Group();
+        [-0.08, 0, 0.08].forEach((tx, idx) => {
+          const toe = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 12), beakMat);
+          toe.rotation.x = Math.PI / 2;
+          toe.rotation.y = (idx - 1) * 0.22;
+          toe.position.set(tx, 0, 0.09);
+          footGroup.add(toe);
+        });
+        const heel = new THREE.Mesh(new THREE.SphereGeometry(0.08, 14, 14), beakMat);
+        heel.position.set(0, 0, -0.04);
+        footGroup.add(heel);
+
+        footGroup.position.set(side * 0.26, -0.68, 0.18);
+        footGroup.castShadow = true;
+        doll.add(footGroup);
+      });
+
     // ========================================================
-    // 4. CHARACTER: GATITO CON CORAZÓN
+    // 4. CHARACTER: GATITO CON CORAZÓN (Con Patas Delanteras y Traseras)
     // ========================================================
     } else if (charId === 'gato') {
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.65, 36, 36), primaryMat);
-      head.position.set(0, 0.85, 0);
+      // Head
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.62, 36, 36), primaryMat);
+      head.position.set(0, 0.72, 0);
       head.castShadow = true;
       doll.add(head);
 
       // Pointed hollow cat ears
       [-1, 1].forEach((side) => {
-        const ear = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.38, 16), primaryMat);
-        ear.position.set(side * 0.38, 1.42, 0.05);
+        const ear = new THREE.Mesh(new THREE.ConeGeometry(0.20, 0.36, 16), primaryMat);
+        ear.position.set(side * 0.36, 1.26, 0.05);
         ear.rotation.z = side * -0.32;
         ear.rotation.x = -0.15;
+        ear.castShadow = true;
 
-        const inner = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.3, 16), secondaryMat);
-        inner.position.set(0, -0.02, 0.06);
+        const inner = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.28, 16), secondaryMat);
+        inner.position.set(0, -0.02, 0.05);
         ear.add(inner);
         doll.add(ear);
       });
 
-      // Black Safety Eyes
+      // Black Safety Eyes with specular highlight
       [-1, 1].forEach((side) => {
         const eye = createSafetyEye(0.08);
-        eye.position.set(side * 0.28, 0.86, 0.58);
+        eye.position.set(side * 0.26, 0.72, 0.55);
         doll.add(eye);
       });
+
+      // Muzzle / Cheeks (Secondary Color or Cream)
+      const muzzle = new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 24), secondaryMat);
+      muzzle.scale.set(1.25, 0.75, 0.6);
+      muzzle.position.set(0, 0.60, 0.56);
+      doll.add(muzzle);
 
       // Pink Embroidered Whiskers & T-mouth (like photo)
       const pinkEmbroidery = new THREE.MeshBasicMaterial({ color: 0xf43f5e });
       [-1, 1].forEach((side) => {
-        const whisker1 = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 0.02), pinkEmbroidery);
-        whisker1.position.set(side * 0.42, 0.82, 0.52);
+        const whisker1 = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.018, 0.02), pinkEmbroidery);
+        whisker1.position.set(side * 0.38, 0.65, 0.55);
         whisker1.rotation.z = side * 0.15;
         doll.add(whisker1);
 
-        const whisker2 = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.02, 0.02), pinkEmbroidery);
-        whisker2.position.set(side * 0.42, 0.75, 0.52);
+        const whisker2 = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.018, 0.02), pinkEmbroidery);
+        whisker2.position.set(side * 0.38, 0.58, 0.55);
         whisker2.rotation.z = side * -0.15;
         doll.add(whisker2);
       });
 
-      // Pink T-nose
-      const nose = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.025, 0.02), pinkEmbroidery);
-      nose.position.set(0, 0.82, 0.65);
-      doll.add(nose);
-      const noseV = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.07, 0.02), pinkEmbroidery);
-      noseV.position.set(0, 0.78, 0.65);
-      doll.add(noseV);
+      // Pink Triangle Nose & Mouth seam
+      const catNose = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.06, 12), pinkEmbroidery);
+      catNose.rotation.z = Math.PI;
+      catNose.position.set(0, 0.67, 0.68);
+      doll.add(catNose);
 
-      // Body
-      const body = new THREE.Mesh(new THREE.SphereGeometry(0.54, 32, 32), primaryMat);
-      body.position.set(0, 0.05, 0);
+      const mouthLine = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.06, 0.02), pinkEmbroidery);
+      mouthLine.position.set(0, 0.62, 0.68);
+      doll.add(mouthLine);
+
+      // Body (Chubby Sitting)
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.52, 32, 32), primaryMat);
+      body.scale.set(1.0, 1.15, 0.95);
+      body.position.set(0, -0.05, 0);
       body.castShadow = true;
       doll.add(body);
+
+      // Soft Belly Patch (Secondary Color)
+      const bellyPatch = new THREE.Mesh(new THREE.SphereGeometry(0.38, 24, 24), secondaryMat);
+      bellyPatch.scale.set(0.85, 1.05, 0.35);
+      bellyPatch.position.set(0, -0.08, 0.42);
+      doll.add(bellyPatch);
 
       // Heart held on chest (like the real photo!)
       const heartMat = new THREE.MeshStandardMaterial({
@@ -690,52 +728,102 @@ export default function AmigurumiViewer3D({
         bumpScale: 0.04,
       });
       const heartGroup = new THREE.Group();
-      const lLob = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), heartMat);
-      lLob.position.set(-0.11, 0.11, 0);
+      const lLob = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), heartMat);
+      lLob.position.set(-0.1, 0.1, 0);
       heartGroup.add(lLob);
-      const rLob = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), heartMat);
-      rLob.position.set(0.11, 0.11, 0);
+      const rLob = new THREE.Mesh(new THREE.SphereGeometry(0.15, 16, 16), heartMat);
+      rLob.position.set(0.1, 0.1, 0);
       heartGroup.add(rLob);
-      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.36, 16), heartMat);
+      const cone = new THREE.Mesh(new THREE.ConeGeometry(0.24, 0.34, 16), heartMat);
       cone.rotation.z = Math.PI;
-      cone.position.set(0, -0.1, 0);
+      cone.position.set(0, -0.09, 0);
       heartGroup.add(cone);
-      heartGroup.position.set(0, 0.15, 0.48);
-      heartGroup.scale.set(1.1, 1.1, 0.85);
+      heartGroup.position.set(0, 0.08, 0.46);
+      heartGroup.scale.set(1.05, 1.05, 0.85);
       doll.add(heartGroup);
 
-      // Tail
-      const tail = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.6, 16), primaryMat);
-      tail.position.set(0, -0.1, -0.5);
-      tail.rotation.x = -Math.PI / 3;
-      doll.add(tail);
+      // Front Paws / Arms hugging the heart
+      [-1, 1].forEach((side) => {
+        const armGroup = new THREE.Group();
+        const armGeo = new THREE.CylinderGeometry(0.10, 0.12, 0.38, 16);
+        const arm = new THREE.Mesh(armGeo, primaryMat);
+        armGroup.add(arm);
+
+        // White / Secondary paw tip
+        const pawTip = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 16), secondaryMat);
+        pawTip.position.y = -0.20;
+        armGroup.add(pawTip);
+
+        armGroup.position.set(side * 0.38, 0.06, 0.28);
+        armGroup.rotation.z = side * -0.55;
+        armGroup.rotation.x = -0.45;
+        armGroup.rotation.y = side * 0.35;
+        armGroup.castShadow = true;
+        doll.add(armGroup);
+      });
+
+      // Hind Sitting Legs & Paws (firmly resting on pedestal floor!)
+      [-1, 1].forEach((side) => {
+        // Thigh
+        const thigh = new THREE.Mesh(new THREE.SphereGeometry(0.25, 20, 20), primaryMat);
+        thigh.scale.set(0.85, 1.1, 1.15);
+        thigh.position.set(side * 0.38, -0.42, 0.02);
+        doll.add(thigh);
+
+        // Foot / Paw resting flat on pedestal
+        const foot = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20), primaryMat);
+        foot.scale.set(0.95, 0.62, 1.35);
+        foot.position.set(side * 0.34, -0.68, 0.24);
+        foot.castShadow = true;
+
+        // Paw pad (secondary color)
+        const pad = new THREE.Mesh(new THREE.CircleGeometry(0.08, 16), secondaryMat);
+        pad.rotation.x = -Math.PI / 2 + 0.3;
+        pad.position.set(0, 0.11, 0.08);
+        foot.add(pad);
+
+        doll.add(foot);
+      });
+
+      // Playful Curved Tail in the back
+      const catTailCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, -0.42, -0.45),
+        new THREE.Vector3(0.05, -0.32, -0.75),
+        new THREE.Vector3(0.20, -0.05, -0.85),
+        new THREE.Vector3(0.28, 0.22, -0.80),
+      ]);
+      const catTailGeo = new THREE.TubeGeometry(catTailCurve, 20, 0.06, 12, false);
+      const catTail = new THREE.Mesh(catTailGeo, primaryMat);
+      catTail.castShadow = true;
+      doll.add(catTail);
 
     // ========================================================
-    // 5. CHARACTER: PERRITO FIEL / SNOOPY
+    // 5. CHARACTER: PERRITO FIEL / SNOOPY (Con Patas Delanteras y Traseras)
     // ========================================================
     } else if (charId === 'perro') {
-      // Elongated Dog Head / Snout (like real Snoopy amigurumi)
+      // Dog Head
       const headGroup = new THREE.Group();
       const cranium = new THREE.Mesh(new THREE.SphereGeometry(0.55, 32, 32), primaryMat);
       headGroup.add(cranium);
 
+      // Long Beagle / Snoopy Snout
       const dogSnout = new THREE.Mesh(new THREE.SphereGeometry(0.38, 28, 28), primaryMat);
       dogSnout.scale.set(0.95, 0.85, 1.4);
       dogSnout.position.set(0, -0.05, 0.42);
       headGroup.add(dogSnout);
 
-      // Big Black Button Nose
+      // Big Glossy Black Button Nose
       const nose = new THREE.Mesh(new THREE.SphereGeometry(0.14, 20, 20), safetyEyeMat);
       nose.scale.set(1.2, 0.9, 0.9);
       nose.position.set(0, 0.02, 0.88);
       headGroup.add(nose);
 
-      // Droopy Black/Accent Ears Hanging Down along cheeks
+      // Droopy Long Ears along cheeks
       [-1, 1].forEach((side) => {
-        const earGeo = new THREE.SphereGeometry(0.24, 20, 20);
+        const earGeo = new THREE.SphereGeometry(0.22, 20, 20);
         earGeo.scale(0.65, 1.8, 0.4);
         const ear = new THREE.Mesh(earGeo, secondaryMat);
-        ear.position.set(side * 0.58, 0.08, 0);
+        ear.position.set(side * 0.58, 0.02, 0);
         ear.rotation.z = side * 0.15;
         ear.castShadow = true;
         headGroup.add(ear);
@@ -743,56 +831,215 @@ export default function AmigurumiViewer3D({
 
       // Eyes
       [-1, 1].forEach((side) => {
-        const eye = createSafetyEye(0.075);
+        const eye = createSafetyEye(0.08);
         eye.position.set(side * 0.28, 0.18, 0.48);
         headGroup.add(eye);
       });
 
-      headGroup.position.set(0, 0.92, 0);
+      headGroup.position.set(0, 0.75, 0);
       doll.add(headGroup);
 
       // Chubby Body
-      const body = new THREE.Mesh(new THREE.SphereGeometry(0.54, 32, 32), primaryMat);
-      body.position.set(0, 0.05, 0);
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.52, 32, 32), primaryMat);
+      body.scale.set(0.98, 1.15, 0.98);
+      body.position.set(0, -0.05, 0);
       body.castShadow = true;
       doll.add(body);
 
+      // Dog Belly Patch
+      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.36, 24, 24), secondaryMat);
+      belly.scale.set(0.85, 1.05, 0.35);
+      belly.position.set(0, -0.08, 0.42);
+      doll.add(belly);
+
+      // Front Legs reaching down to pedestal
+      [-1, 1].forEach((side) => {
+        const frontLeg = new THREE.Group();
+        const legGeo = new THREE.CylinderGeometry(0.11, 0.13, 0.42, 16);
+        const legMesh = new THREE.Mesh(legGeo, primaryMat);
+        frontLeg.add(legMesh);
+
+        // Paw base
+        const paw = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), secondaryMat);
+        paw.scale.set(1.0, 0.65, 1.25);
+        paw.position.set(0, -0.21, 0.05);
+        frontLeg.add(paw);
+
+        frontLeg.position.set(side * 0.20, -0.48, 0.26);
+        frontLeg.castShadow = true;
+        doll.add(frontLeg);
+      });
+
+      // Hind Sitting Legs & Paws
+      [-1, 1].forEach((side) => {
+        const thigh = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 20), primaryMat);
+        thigh.scale.set(0.85, 1.1, 1.15);
+        thigh.position.set(side * 0.36, -0.42, -0.02);
+        doll.add(thigh);
+
+        const foot = new THREE.Mesh(new THREE.SphereGeometry(0.16, 16, 16), primaryMat);
+        foot.scale.set(0.95, 0.6, 1.3);
+        foot.position.set(side * 0.36, -0.68, 0.16);
+        foot.castShadow = true;
+        doll.add(foot);
+      });
+
+      // Wagging Tail
+      const tailCurve = new THREE.CatmullRomCurve3([
+        new THREE.Vector3(0, -0.35, -0.48),
+        new THREE.Vector3(0, -0.15, -0.72),
+        new THREE.Vector3(0.08, 0.05, -0.78),
+      ]);
+      const tailGeo = new THREE.TubeGeometry(tailCurve, 16, 0.055, 12, false);
+      const tail = new THREE.Mesh(tailGeo, primaryMat);
+      doll.add(tail);
+
     // ========================================================
-    // 6. CHARACTER: CONEJITA MÁGICA
+    // 6. CHARACTER: CONEJITA MÁGICA (Con Nariz Rosada, Hocico y Patas)
     // ========================================================
     } else {
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.64, 36, 36), primaryMat);
-      head.position.set(0, 0.85, 0);
+      // Head
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.60, 36, 36), primaryMat);
+      head.position.set(0, 0.68, 0);
       head.castShadow = true;
       doll.add(head);
 
-      // Long Tall Upright Bunny Ears
-      [-1, 1].forEach((side) => {
-        const earGeo = new THREE.CylinderGeometry(0.1, 0.16, 0.95, 20);
-        earGeo.scale(0.8, 1.0, 0.35);
-        const ear = new THREE.Mesh(earGeo, primaryMat);
-        ear.position.set(side * 0.28, 1.78, 0);
-        ear.rotation.z = side * 0.12;
+      // Sweet White / Secondary Muzzle (Hocico prominente de conejito)
+      const muzzleGeo = new THREE.SphereGeometry(0.24, 24, 24);
+      muzzleGeo.scale(1.25, 0.8, 0.65);
+      const muzzle = new THREE.Mesh(muzzleGeo, secondaryMat);
+      muzzle.position.set(0, 0.58, 0.52);
+      doll.add(muzzle);
 
-        const inner = new THREE.Mesh(new THREE.PlaneGeometry(0.14, 0.75), secondaryMat);
-        inner.position.set(0, 0, 0.07);
-        ear.add(inner);
-        doll.add(ear);
+      // Cute Pink Amigurumi Nose (Nariz rosada bien definida que el usuario solicitó)
+      const pinkMat = new THREE.MeshStandardMaterial({
+        color: 0xf472b6,
+        roughness: 0.5,
+        bumpMap: crochetTexture,
+        bumpScale: 0.03,
+      });
+      const bunnyNose = new THREE.Mesh(new THREE.SphereGeometry(0.075, 16, 16), pinkMat);
+      bunnyNose.scale.set(1.2, 0.9, 0.8);
+      bunnyNose.position.set(0, 0.64, 0.68);
+      doll.add(bunnyNose);
+
+      // Embroidered Mouth Seam ("Y" amigurumi smile)
+      const seamMat = new THREE.MeshBasicMaterial({ color: 0x9d174d });
+      const seam = new THREE.Mesh(new THREE.BoxGeometry(0.018, 0.08, 0.02), seamMat);
+      seam.position.set(0, 0.58, 0.68);
+      doll.add(seam);
+
+      // Sweet Rosy Cheeks (Mejillas sonrosadas de conejita)
+      const blushMat = new THREE.MeshBasicMaterial({ color: 0xfb7185 });
+      [-1, 1].forEach((side) => {
+        const blush = new THREE.Mesh(new THREE.CircleGeometry(0.09, 16), blushMat);
+        blush.position.set(side * 0.36, 0.58, 0.50);
+        blush.rotation.y = side * 0.45;
+        doll.add(blush);
       });
 
+      // Expressive Safety Eyes
       [-1, 1].forEach((side) => {
-        const eye = createSafetyEye(0.08);
-        eye.position.set(side * 0.26, 0.85, 0.58);
+        const eye = createSafetyEye(0.078);
+        eye.position.set(side * 0.25, 0.70, 0.54);
         doll.add(eye);
       });
 
-      const body = new THREE.Mesh(new THREE.SphereGeometry(0.54, 32, 32), primaryMat);
-      body.position.set(0, 0.05, 0);
+      // Long Graceful Bunny Ears (Proportion to fit beautifully in canvas)
+      [-1, 1].forEach((side) => {
+        const earGroup = new THREE.Group();
+
+        // Outer Ear Shell
+        const earGeo = new THREE.SphereGeometry(0.18, 24, 24);
+        earGeo.scale(0.85, 2.6, 0.35);
+        const outerEar = new THREE.Mesh(earGeo, primaryMat);
+        outerEar.position.y = 0.42;
+        outerEar.castShadow = true;
+        earGroup.add(outerEar);
+
+        // Inner Pink Channel
+        const innerGeo = new THREE.SphereGeometry(0.14, 20, 20);
+        innerGeo.scale(0.75, 2.3, 0.2);
+        const innerEar = new THREE.Mesh(innerGeo, secondaryMat);
+        innerEar.position.set(0, 0.42, 0.05);
+        earGroup.add(innerEar);
+
+        earGroup.position.set(side * 0.26, 1.15, 0.02);
+        earGroup.rotation.z = side * -0.16;
+        earGroup.rotation.x = -0.08;
+        doll.add(earGroup);
+      });
+
+      // Body (Chubby Sitting)
+      const body = new THREE.Mesh(new THREE.SphereGeometry(0.50, 32, 32), primaryMat);
+      body.scale.set(1.0, 1.15, 0.95);
+      body.position.set(0, -0.06, 0);
+      body.castShadow = true;
       doll.add(body);
+
+      // Belly Patch
+      const belly = new THREE.Mesh(new THREE.SphereGeometry(0.36, 24, 24), secondaryMat);
+      belly.scale.set(0.85, 1.05, 0.35);
+      belly.position.set(0, -0.08, 0.40);
+      doll.add(belly);
+
+      // Front Paws / Arms (Patitas delanteras juntas en el pechito)
+      [-1, 1].forEach((side) => {
+        const pawGroup = new THREE.Group();
+        const armGeo = new THREE.CylinderGeometry(0.09, 0.11, 0.34, 16);
+        const arm = new THREE.Mesh(armGeo, primaryMat);
+        pawGroup.add(arm);
+
+        const pawTip = new THREE.Mesh(new THREE.SphereGeometry(0.10, 16, 16), secondaryMat);
+        pawTip.position.y = -0.18;
+        pawGroup.add(pawTip);
+
+        pawGroup.position.set(side * 0.24, 0.08, 0.32);
+        pawGroup.rotation.z = side * -0.45;
+        pawGroup.rotation.x = -0.35;
+        pawGroup.castShadow = true;
+        doll.add(pawGroup);
+      });
+
+      // Long Authentic Bunny Hind Feet (Patas traseras de conejo con almohadillas rosas)
+      [-1, 1].forEach((side) => {
+        const thigh = new THREE.Mesh(new THREE.SphereGeometry(0.24, 20, 20), primaryMat);
+        thigh.scale.set(0.85, 1.1, 1.1);
+        thigh.position.set(side * 0.34, -0.42, 0.02);
+        doll.add(thigh);
+
+        // Big Long Foot extending forward onto pedestal floor
+        const foot = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20), primaryMat);
+        foot.scale.set(0.9, 0.58, 1.6);
+        foot.position.set(side * 0.32, -0.68, 0.28);
+        foot.castShadow = true;
+
+        // Big Pink Heel Pad
+        const mainPad = new THREE.Mesh(new THREE.CircleGeometry(0.08, 16), pinkMat);
+        mainPad.rotation.x = -Math.PI / 2 + 0.2;
+        mainPad.position.set(0, 0.11, 0.05);
+        foot.add(mainPad);
+
+        // 3 Little Pink Toe Pads
+        [-0.05, 0, 0.05].forEach((tx) => {
+          const toePad = new THREE.Mesh(new THREE.CircleGeometry(0.025, 12), pinkMat);
+          toePad.rotation.x = -Math.PI / 2 + 0.2;
+          toePad.position.set(tx, 0.11, 0.22);
+          foot.add(toePad);
+        });
+
+        doll.add(foot);
+      });
+
+      // Fluffy White Pompom Tail (Colita redonda de pompón)
+      const tail = new THREE.Mesh(new THREE.SphereGeometry(0.18, 20, 20), secondaryMat);
+      tail.position.set(0, -0.38, -0.48);
+      tail.castShadow = true;
+      doll.add(tail);
     }
 
     // ========================================================
-    // DYNAMIC 3D ACCESSORIES
+    // DYNAMIC 3D ACCESSORIES (Positioned per Character)
     // ========================================================
     const acc = accessoriesGroupRef.current;
 
@@ -818,9 +1065,17 @@ export default function AmigurumiViewer3D({
       band.position.y = 0.06;
       hatGroup.add(band);
 
-      hatGroup.position.set(0.15, 1.55, 0.05);
+      const hatY =
+        charId === 'conejo' ? 1.25 :
+        charId === 'gato' ? 1.22 :
+        charId === 'perro' ? 1.24 :
+        charId === 'stitch' ? 1.48 :
+        charId === 'dino' ? 1.55 : 1.40;
+      const hatX = charId === 'conejo' ? 0.22 : 0.12;
+
+      hatGroup.position.set(hatX, hatY, 0.05);
       hatGroup.rotation.z = -0.18;
-      hatGroup.rotation.x = -0.12;
+      hatGroup.rotation.x = -0.10;
       acc.add(hatGroup);
     }
 
@@ -847,7 +1102,13 @@ export default function AmigurumiViewer3D({
       pt.position.set(0, -0.09, 0);
       heartGroup.add(pt);
 
-      heartGroup.position.set(0, 0.15, 0.54);
+      const heartY =
+        charId === 'dino' ? 0.22 :
+        charId === 'stitch' ? 0.15 :
+        charId === 'perro' ? 0.10 :
+        charId === 'conejo' ? 0.08 : 0.12;
+
+      heartGroup.position.set(0, heartY, 0.52);
       heartGroup.scale.set(1.1, 1.1, 0.9);
       acc.add(heartGroup);
     }
@@ -870,7 +1131,17 @@ export default function AmigurumiViewer3D({
       wR.position.set(0.15, 0, 0);
       bowGroup.add(wR);
 
-      bowGroup.position.set(0, 0.42, 0.52);
+      const bowY =
+        charId === 'dino' ? 0.48 :
+        charId === 'stitch' ? 0.42 :
+        charId === 'perro' ? 0.36 :
+        charId === 'gato' ? 0.34 :
+        charId === 'conejo' ? 0.32 : 0.32;
+      const bowZ =
+        charId === 'dino' ? 0.58 :
+        charId === 'perro' ? 0.52 : 0.50;
+
+      bowGroup.position.set(0, bowY, bowZ);
       acc.add(bowGroup);
     }
 
@@ -885,11 +1156,19 @@ export default function AmigurumiViewer3D({
 
       const torus = new THREE.Mesh(new THREE.TorusGeometry(0.52, 0.12, 16, 36), scarfMat);
       torus.rotation.x = Math.PI / 2 + 0.1;
-      torus.position.set(0, 0.38, 0.02);
+
+      const scarfY =
+        charId === 'dino' ? 0.45 :
+        charId === 'stitch' ? 0.38 :
+        charId === 'perro' ? 0.34 :
+        charId === 'gato' ? 0.30 :
+        charId === 'conejo' ? 0.28 : 0.28;
+
+      torus.position.set(0, scarfY, 0.02);
       acc.add(torus);
 
       const tail = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.42, 0.07), scarfMat);
-      tail.position.set(0.22, 0.12, 0.52);
+      tail.position.set(0.22, scarfY - 0.26, 0.52);
       tail.rotation.z = -0.15;
       acc.add(tail);
     }
@@ -905,20 +1184,33 @@ export default function AmigurumiViewer3D({
       chain.position.y = 0.08;
       ringGroup.add(chain);
 
-      ringGroup.position.set(0, charId === 'stitch' ? 1.62 : 1.54, 0);
+      const keyRingY =
+        charId === 'dino' ? 1.62 :
+        charId === 'stitch' ? 1.62 :
+        charId === 'pollito' ? 1.58 :
+        charId === 'conejo' ? 1.48 :
+        charId === 'gato' ? 1.34 : 1.32;
+
+      ringGroup.position.set(0, keyRingY, 0);
       acc.add(ringGroup);
     }
 
-    // Scale whole doll according to Size
+    // Scale whole doll according to Size and keep feet anchored to pedestal (-0.72)
     const scaleFactor = size === 'mini' ? 0.82 : size === 'grande' ? 1.25 : 1.0;
     doll.scale.set(scaleFactor, scaleFactor, scaleFactor);
     acc.scale.set(scaleFactor, scaleFactor, scaleFactor);
 
+    const baseOffset = -0.72 * (1 - scaleFactor);
+    doll.position.y = baseOffset;
+    acc.position.y = baseOffset;
+
   }, [character, primaryColor, secondaryColor, accessories, size]);
 
   const resetCamera = () => {
-    if (controlsRef.current) {
-      controlsRef.current.reset();
+    if (controlsRef.current && cameraRef.current) {
+      cameraRef.current.position.set(0, 0.8, 5.0);
+      controlsRef.current.target.set(0, 0.25, 0);
+      controlsRef.current.update();
     }
   };
 
